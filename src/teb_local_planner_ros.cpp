@@ -215,9 +215,10 @@ bool TebLocalPlannerROS::setPlan(const std::vector<geometry_msgs::PoseStamped>& 
 
   // we do not clear the local planner here, since setPlan is called frequently whenever the global planner updates the plan.
   // the local planner checks whether it is required to reinitialize the trajectory or not within each velocity computation step.  
-            
+
+  // AQL: Removed this reset flag as it conflicts with the reaching of the goal--setPlan is called before isGoalReached.
   // reset goal_reached_ flag
-  goal_reached_ = false;
+  // goal_reached_ = false;
   
   return true;
 }
@@ -468,6 +469,7 @@ bool TebLocalPlannerROS::isGoalReached()
   {
     ROS_INFO("GOAL Reached!");
     planner_->clearPlanner();
+    goal_reached_ = false; // resetting flag
     return true;
   }
   return false;
